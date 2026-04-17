@@ -1,0 +1,78 @@
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+// Bogie class
+class Bogie {
+    String name;
+    int capacity;
+
+    Bogie(String name, int capacity) {
+        this.name = name;
+        this.capacity = capacity;
+    }
+
+    @Override
+    public String toString() {
+        return name + " (Capacity: " + capacity + ")";
+    }
+}
+
+public class TrainConsistManagementApp {
+
+    public static void main(String[] args) {
+        System.out.println("=== Train Consist Management App ===");
+
+        // Create a large collection of bogies for testing
+        List<Bogie> bogies = new ArrayList<>();
+
+        for (int i = 1; i <= 10000; i++) {
+            if (i % 3 == 0) {
+                bogies.add(new Bogie("Sleeper", 72));
+            } else if (i % 3 == 1) {
+                bogies.add(new Bogie("AC Chair", 56));
+            } else {
+                bogies.add(new Bogie("First Class", 24));
+            }
+        }
+
+        // Loop-based filtering
+        long loopStart = System.nanoTime();
+
+        List<Bogie> loopFiltered = new ArrayList<>();
+        for (Bogie b : bogies) {
+            if (b.capacity > 60) {
+                loopFiltered.add(b);
+            }
+        }
+
+        long loopEnd = System.nanoTime();
+        long loopTime = loopEnd - loopStart;
+
+        // Stream-based filtering
+        long streamStart = System.nanoTime();
+
+        List<Bogie> streamFiltered = bogies.stream()
+                .filter(b -> b.capacity > 60)
+                .collect(Collectors.toList());
+
+        long streamEnd = System.nanoTime();
+        long streamTime = streamEnd - streamStart;
+
+        // Display results
+        System.out.println("\nLoop-based filtering result count: " + loopFiltered.size());
+        System.out.println("Loop execution time: " + loopTime + " ns");
+
+        System.out.println("\nStream-based filtering result count: " + streamFiltered.size());
+        System.out.println("Stream execution time: " + streamTime + " ns");
+
+        // Result consistency check
+        if (loopFiltered.size() == streamFiltered.size()) {
+            System.out.println("\nBoth loop and stream produced the same result count.");
+        } else {
+            System.out.println("\nMismatch found between loop and stream results.");
+        }
+
+        System.out.println("\nProgram continues...");
+    }
+}
