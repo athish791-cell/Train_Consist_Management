@@ -1,0 +1,53 @@
+import java.util.ArrayList;
+import java.util.List;
+
+// Goods Bogie class
+class GoodsBogie {
+    String type;   // Cylindrical / Open / Box
+    String cargo;  // Petroleum / Coal / Grain
+
+    GoodsBogie(String type, String cargo) {
+        this.type = type;
+        this.cargo = cargo;
+    }
+
+    @Override
+    public String toString() {
+        return type + " Bogie carrying " + cargo;
+    }
+}
+
+public class TrainConsistManagementApp {
+
+    public static void main(String[] args) {
+        System.out.println("=== Train Consist Management App ===");
+
+        // Create goods bogies list
+        List<GoodsBogie> goodsList = new ArrayList<>();
+
+        goodsList.add(new GoodsBogie("Cylindrical", "Petroleum"));
+        goodsList.add(new GoodsBogie("Open", "Coal"));
+        goodsList.add(new GoodsBogie("Box", "Grain"));
+        goodsList.add(new GoodsBogie("Cylindrical", "Petroleum")); // valid
+
+        System.out.println("\nGoods Bogies:");
+        goodsList.forEach(System.out::println);
+
+        // Safety validation using allMatch()
+        boolean isSafe = goodsList.stream()
+                .allMatch(b ->
+                        !b.type.equals("Cylindrical") || 
+                        b.cargo.equals("Petroleum")
+                );
+
+        // Display result
+        System.out.println("\nSafety Compliance Status:");
+        if (isSafe) {
+            System.out.println("Train is SAFE for operation");
+        } else {
+            System.out.println("Train is UNSAFE - Invalid cargo detected!");
+        }
+
+        System.out.println("\nProgram continues...");
+    }
+}
